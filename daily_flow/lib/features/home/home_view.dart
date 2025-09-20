@@ -1,4 +1,7 @@
+import 'package:daily_flow/features/home/widgets/habit_card.dart';
+import 'package:daily_flow/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
+import 'package:soft_edge_blur/soft_edge_blur.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -11,74 +14,77 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF171717),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline, 
-            textBaseline: TextBaseline.alphabetic, 
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Transform.translate(
-                offset: Offset(0, 2), 
-                child: Icon(Icons.add_task, color: Colors.white, size: 30),
-              ),
-              const SizedBox(width: 7),
-              RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    fontFamily: 'Dosis',
-                    fontSize: 30, 
-                    fontWeight: FontWeight.w700, 
-                    color: Colors.white,
-                  ),
-                  children: [
-                    const TextSpan(text: "meta."),
-                    TextSpan(
-                      text: "diária",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        color: Color(0xFF45EDAD),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      appBar: AppBar(
+        backgroundColor: Color(0xFF71BED2),
+        title: AppLogo(),
+        toolbarHeight: 56.0,
+      ),
+      backgroundColor: Color(0xFFE5F2F8),
+      body: SoftEdgeBlur(
+        edges: [
+          EdgeBlur(
+            type: EdgeType.bottomEdge,
+            size: 80, // Tamanho do efeito de blur
+            sigma: 20, // Intensidade do desfoque
+            tintColor: Color(0xFFE5F2F8).withAlpha(204), // Sua cor de fundo com transparência
+            controlPoints: [
+              ControlPoint(position: 0.4, type: ControlPointType.visible),
+              ControlPoint(position: 1.0, type: ControlPointType.transparent),
             ],
           ),
-          // colocar o if para só aparecer quando o a lista de hábitos do state estiver vazia
-          Text(
-            'você não tem hábitos cadastrados',
-            style: TextStyle(
-              fontFamily: 'Dosis',
-              fontSize: 25, 
-              fontWeight: FontWeight.w400, 
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          FilledButton(
-            onPressed: () {},
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Color(0xFF45EDAD)),
-              foregroundColor: WidgetStatePropertyAll(Color(0xFF171717)),
-              minimumSize: WidgetStateProperty.all(
-                Size(
-                  MediaQuery.of(context).size.width * 0.7, 
-                  50, 
-                ),
-              ),
-              shape: WidgetStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(3.0),
-                ),
-              ),
-            ), 
-            child: const Text('novo hábito', style: TextStyle(fontSize: 23),),
-          ),
         ],
-      )
+        child: ListView.separated(
+          padding: EdgeInsets.all(16),
+          itemCount: 10,
+          separatorBuilder: (context, index) => SizedBox(height: 8),
+          itemBuilder: (context, index) {
+            return HabitCard();
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Color(0xFFF1D35B),
+        foregroundColor: Color(0xFF171717),
+        shape: CircleBorder(),
+        child: Center(
+          child: Icon(Icons.add, color: Colors.black),
+        )
+      ),
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+        child: BottomNavigationBar(
+          // currentIndex: _selectedIndex,
+          // onTap: _onItemTapped,
+          backgroundColor: Color(0xFFE5F2F8),
+          selectedItemColor: Color(0xFFF1D35B),
+          unselectedItemColor: Colors.grey[600],
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          iconSize: 24,
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home_rounded),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.insights_outlined),
+              activeIcon: Icon(Icons.insights_rounded),
+              label: 'Estatísticas',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outlined),
+              activeIcon: Icon(Icons.person_rounded),
+              label: 'Perfil',
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
